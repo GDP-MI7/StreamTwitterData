@@ -2,22 +2,23 @@ import tweepy
 import csv
 import pandas as pd
 ####input your credentials here
-consumer_key = 'HTNc6rm4tX63VYQKWQCV40TFm'
-consumer_secret = 'bAWS75kNkDMKrWvGvzoGVYrRdjrtrZk7BaPwTBcBzdpfdHr0Il'
-access_token = '969603656080330753-ucYDl5fW5aJmzT2AJIuR6wtKaa8Jf7A'
-access_token_secret = 'HrI9XHNBqtQ0xxouDPqeY6OOOzLav1moLk1BgP7l29an9'
+consumer_key = 'cUl8PhvD2GBmBU7Oyu1yHcSzZ'
+consumer_secret = 'KE2BoICmlSaNr75VWZtlXL5eIjLyRYR7hdBfVHwNAUd0P3PyFc'
+access_token = '1008783848812023812-KkImFZ0o41ie8troJgwciwqLSSYfuw'
+access_token_secret = 'qWoTlhuXronTzCdDdTmPOoLK0tr2oRHu9P3uoR0somtJk'
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
-api = tweepy.API(auth,wait_on_rate_limit=True)
-#####United Airlines
+api = tweepy.API(auth,wait_on_rate_limit=False)
 # Open/Create a file to append data
-# csvFile = open('ua.csv', 'a')
+csvFile = open('Hashtag.csv', 'a')
 #Use csv Writer
-# csvWriter = csv.writer(csvFile)
-
-for tweet in tweepy.Cursor(api.search,q="#unitedAIRLINES",count=10,
+csvWriter = csv.writer(csvFile)
+print('enter the hashtag')
+hashtag = input()
+print(hashtag)
+for tweet in tweepy.Cursor(api.search,q = hashtag,count = 90,
                            lang="en",
-                           since="2017-04-03").items():
+                           since="2018-06-29").items():
     print (tweet.created_at, tweet.text)
-    # csvWriter.writerow([tweet.created_at, tweet.text.encode('utf-8')])
+    csvWriter.writerow([tweet.created_at, tweet.text.encode('utf-8')])
