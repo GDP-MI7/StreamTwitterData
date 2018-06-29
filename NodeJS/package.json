@@ -1,0 +1,22 @@
+{
+  "name": "streamtwitterdatanodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s530670/StreamTwitterDataNodeJS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/s530670/StreamTwitterDataNodeJS/issues"
+  },
+  "homepage": "https://github.com/s530670/StreamTwitterDataNodeJS#readme",
+  "dependencies": {
+    "twit": "^2.2.10"
+  }
+}
