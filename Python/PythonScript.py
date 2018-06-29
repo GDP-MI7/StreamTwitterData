@@ -10,13 +10,14 @@ access_token_secret = 'qWoTlhuXronTzCdDdTmPOoLK0tr2oRHu9P3uoR0somtJk'
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth,wait_on_rate_limit=False)
-# Open/Create a file to append data
-csvFile = open('Hashtag.csv', 'a')
-#Use csv Writer
-csvWriter = csv.writer(csvFile)
+
 print('enter the hashtag')
 hashtag = input()
-print(hashtag)
+
+# Open/Create a file to append data
+csvFile = open(hashtag +'.csv', 'a')
+#Use csv Writer
+csvWriter = csv.writer(csvFile)
 for tweet in tweepy.Cursor(api.search,q = hashtag,count = 90,
                            lang="en",
                            since="2018-06-29").items():
