@@ -2,18 +2,15 @@ import tweepy
 from pymongo import MongoClient
 import csv
 import json
-import pandas as pd
-
 
 #connecting to mongodb
 client = MongoClient()
 client = MongoClient('mongodb://localhost:27017')
 tdb = client.twitter
 htd = tdb.hashtagdata
-tdb.htd.ensure_index("id", unique=True, dropDups=True)
-print('connection successful')
+#print('connection successful')
 
-####input your credentials here
+#input twitter credentials
 consumer_key = 'cUl8PhvD2GBmBU7Oyu1yHcSzZ'
 consumer_secret = 'KE2BoICmlSaNr75VWZtlXL5eIjLyRYR7hdBfVHwNAUd0P3PyFc'
 access_token = '1008783848812023812-KkImFZ0o41ie8troJgwciwqLSSYfuw'
@@ -30,18 +27,17 @@ print(hashtag)
 print('enter date')
 date = input()
 print(date)
+#collecting stream of tweets
 for tweet in tweepy.Cursor(api.search,q = hashtag,count = 9000,
                            lang="en",
                            since=date).items():
-    #adding in the database
+    #adding tweets to the collection
     rec = {"created_at": tweet.created_at,
                            "text": tweet.text}
-    # inserting the data in the database
     htd.insert(rec)
-    #print (tweet.created_at, tweet.text)
 
 '''
-old code
+code to generate csv of tweets for hastag
 # Open/Create a file to append data
 csvFile = open(hashtag+'.csv', 'a')
 #Use csv Writer
