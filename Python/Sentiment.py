@@ -1,5 +1,8 @@
 import re
+import json
 import tweepy
+import json
+import pymongo
 from tweepy import OAuthHandler
 from textblob import TextBlob
 
@@ -43,12 +46,22 @@ class TwitterClient(object):
 		# create TextBlob object of passed tweet text
 		analysis = TextBlob(self.clean_tweet(tweet))
 		# set sentiment
+		# if analysis.sentiment.subjectivity > 0.5:
+
 		if analysis.sentiment.polarity > 0:
 			return 'positive'
 		elif analysis.sentiment.polarity == 0:
 			return 'neutral'
 		else:
 			return 'negative'
+	
+	def get_tweet_polarity(self, tweet):
+		analysis = TextBlob(self.clean_tweet(tweet))
+		return analysis.sentiment.polarity
+
+	def get_tweet_subjectivity(self, tweet):
+		analysis = TextBlob(self.clean_tweet(tweet))
+		return analysis.sentiment.subjectivity
 
 	def get_tweets(self, query, count = 10):
 		'''
@@ -70,6 +83,11 @@ class TwitterClient(object):
 				parsed_tweet['text'] = tweet.text
 				# saving sentiment of tweet
 				parsed_tweet['sentiment'] = self.get_tweet_sentiment(tweet.text)
+				# saving polarity of tweet
+				parsed_tweet['polarity'] = self.get_tweet_polarity(tweet.text)
+				# saving subjectivity of tweet
+				parsed_tweet['subjectivity'] = self.get_tweet_subjectivity(tweet.text)
+
 
 				# appending parsed tweet to tweets list
 				if tweet.retweet_count > 0:
@@ -86,11 +104,30 @@ class TwitterClient(object):
 			# print error (if any)
 			print("Error : " + str(e))
 
+print("Enter Hashtag:")
+tag = input()
+filename = tag + ".json"
+
+
+
 def main():
 	# creating object of TwitterClient Class
 	api = TwitterClient()
 	# calling function to get tweets
-	tweets = api.get_tweets(query = '#KeepFamliesTogether', count = 200)
+	tweets = api.get_tweets(query = 'tag', count = 10000)
+
+	# writing all tweets to json file
+	listtojson = json.dumps(tweets)
+	loadingjson = json.loads(listtojson)
+	# writing to a json file
+	with open(filename, 'w') as outfile:
+		json.dump(loadingjson, outfile)
+
+	# inserting into mongodb
+	connection = pymongo.MongoClient("mongodb+srv://gdp:gdp@socio-analyzer-8uxmb.mongodb.net/test?retryWrites=true")
+	db=connection.tweets
+	sentiment = db.tweets_collection
+	sentiment.insert_many(loadingjson)
 
 
 	# picking positive tweets from tweets
@@ -102,8 +139,8 @@ def main():
 	# percentage of negative tweets
 	print("Negative tweets percentage: {} %".format(100*len(ntweets)/len(tweets)))
 	# percentage of neutral tweets
-#	print("Neutral tweets percentage: {} % \
-#		".format(100*len(tweets - ntweets - ptweets)/len(tweets)))
+		#	print("Neutral tweets percentage: {} % \
+		#		".format(100*len(tweets - ntweets - ptweets)/len(tweets)))
 
 	# printing first 5 positive tweets
 	print("\n\nPositive tweets:")
@@ -119,7 +156,8 @@ def main():
 		print(tweet['text'])
 		# s.write(tweet['text'])
 
+
+
 if __name__ == "__main__":
 	# calling main function
 	main()
-
