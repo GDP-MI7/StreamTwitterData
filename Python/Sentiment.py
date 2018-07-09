@@ -63,6 +63,10 @@ class TwitterClient(object):
 		analysis = TextBlob(self.clean_tweet(tweet))
 		return analysis.sentiment.subjectivity
 
+	# def get_tweet_createdat(self, tweet):
+	# 	analysis = TextBlob(self.clean_tweet(tweet))
+	# 	return tweet.created_at
+
 	def get_tweets(self, query, count = 10):
 		'''
 		Main function to fetch tweets and parse them.
@@ -87,6 +91,8 @@ class TwitterClient(object):
 				parsed_tweet['polarity'] = self.get_tweet_polarity(tweet.text)
 				# saving subjectivity of tweet
 				parsed_tweet['subjectivity'] = self.get_tweet_subjectivity(tweet.text)
+				# saving date and time of tweet creation
+				parsed_tweet['created_at'] = str(tweet.created_at)
 
 
 				# appending parsed tweet to tweets list
@@ -125,8 +131,8 @@ def main():
 
 	# inserting into mongodb
 	connection = pymongo.MongoClient("mongodb+srv://gdp:gdp@socio-analyzer-8uxmb.mongodb.net/test?retryWrites=true")
-	db=connection.tweets
-	sentiment = db.tweets_collection
+	db=connection.final
+	sentiment = db.final_collection
 	sentiment.insert_many(loadingjson)
 
 
