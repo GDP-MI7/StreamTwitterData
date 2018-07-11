@@ -1,5 +1,5 @@
 # Retrieve Twitter Data
-We have designed two scripts for pulling the twitter post based on the hashtag.
+We have designed scripts for performing twitter related operations.
 
 ## NodeJS version
 - Go to NodeJS folder
